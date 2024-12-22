@@ -1,6 +1,6 @@
 ﻿namespace EmployeeAdminPortalAPI.Models
 {
-    public class AddEmployeeDto
+    public class UpdateEmployeeDto
     {
         public required string Name { get; set; }
         public required string Email { get; set; }

@@ -20,7 +20,7 @@ namespace EmployeeAdminPortalAPI.Controllers
             _dbContext = dbContext;
         }
 
-        // Get All employees method example
+        // Get All employees example
         [HttpGet]
         public IActionResult GetAllEmployees()
         {
@@ -53,7 +53,7 @@ namespace EmployeeAdminPortalAPI.Controllers
             return Ok(employees);
         }
 
-        // Post method example (Dto = Data Transfer Object)
+        // Post example (Dto = Data Transfer Object) (Add single data)
         [HttpPost]
         public IActionResult AddEmployee(AddEmployeeDto addEmployeeDto)
         {
@@ -66,10 +66,55 @@ namespace EmployeeAdminPortalAPI.Controllers
             };
 
             _dbContext.Employees.Add(employeeEntity);
+
             // Save change.(Same as COMMIT; in DB.)
             _dbContext.SaveChanges();
 
             return Ok(employeeEntity);
+            // return CreatedAtAction(nameof(GetEmployeesById), new { id = employeeEntity.Id }, employeeEntity);
+        }
+
+        // Put example (Update single data)
+        [HttpPut]
+        [Route("{id:guid}")]
+        public IActionResult UpdateEmployee(Guid id, UpdateEmployeeDto updateEmployeeDto)
+        {
+            var employee = _dbContext.Employees.Find(id);
+
+            if (employee == null)
+            {
+                // return 404 Not Found
+                return NotFound();
+            }
+
+            employee.Name = updateEmployeeDto.Name;
+            employee.Email = updateEmployeeDto.Email;
+            employee.Phone = updateEmployeeDto.Phone;
+            employee.Salary = updateEmployeeDto.Salary;
+
+            _dbContext.SaveChanges();
+
+            return Ok(employee);
+        }
+
+        // Delete example
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public IActionResult DeleteEmployee(Guid id)
+        {
+            var employee = _dbContext.Employees.Find(id);
+
+            if (employee == null)
+            {
+                // return 404 Not Found
+                return NotFound();
+            }
+
+            _dbContext.Employees.Remove(employee);
+
+            _dbContext.SaveChanges();
+
+            return Ok(employee);
         }
     }
 }
